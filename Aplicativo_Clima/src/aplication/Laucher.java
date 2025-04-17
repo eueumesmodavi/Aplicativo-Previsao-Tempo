@@ -2,6 +2,8 @@ package aplication;
 
 import javax.swing.SwingUtilities;
 
+import org.json.simple.parser.ParseException;
+
 
 public class Laucher {
 
@@ -11,7 +13,7 @@ public class Laucher {
 			public void run() {
 				
 				new ClimaTempoGUI().setVisible(true);
-				
+		
 			}
 		});
 		
