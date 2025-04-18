@@ -82,7 +82,7 @@ public class ClimaTempoGUI extends JFrame {
 		add(ventoIcon);
 
 		// Velocidade do Vento
-		JLabel ventoText = new JLabel("<html><b>Velocidade:</b><br> 15Km/h</html>");
+		JLabel ventoText = new JLabel("<html><b>Velocidade:</b><br>15 Km/h</html>");
 		ventoText.setBounds(310, 500, 85, 55);
 		ventoText.setFont(new Font("Arial", Font.PLAIN, 16));
 		add(ventoText);
@@ -123,7 +123,7 @@ public class ClimaTempoGUI extends JFrame {
 					break;
 				}
 				
-				condClimIcon.setText(condiClima);
+				//condClimIcon.setText(condiClima);
 				
 				// Atualiza temperatura
 				double temperatura = (double) climaData.get("temperature");
@@ -145,15 +145,15 @@ public class ClimaTempoGUI extends JFrame {
 	// Métodos para carregar os ícones
 	
 	public ImageIcon LoadImageProcura() {
-		return new ImageIcon("assets/iconeprocurar.png");
+		return new ImageIcon("assets/lupa.png");
 	}
 
 	public ImageIcon LoadImageClima() {
-		return new ImageIcon("assets/nublado.png");
+		return new ImageIcon("assets/cloudy1.png");
 	}
 
 	public ImageIcon LoadImageHumidade() {
-		return new ImageIcon("assets/gota.png");
+		return new ImageIcon("assets/umidade.png");
 	}
 
 	public ImageIcon LoadImageVento() {
@@ -161,15 +161,15 @@ public class ClimaTempoGUI extends JFrame {
 	}
 	
 	public ImageIcon LoadImageSol() {
-		return new ImageIcon("assets/sol.png");
+		return new ImageIcon("assets/sun1.png");
 	}
 	
 	public ImageIcon LoadImageChuva() {
-		return new ImageIcon("assets/chuva.png");
+		return new ImageIcon("assets/rain1.png");
 	}
 	
 	public ImageIcon LoadImageNeve() {
-		return new ImageIcon("assets/neve.png");
+		return new ImageIcon("assets/snow1.png");
 	}
 
 }
