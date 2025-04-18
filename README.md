@@ -19,6 +19,11 @@ Com as coordenadas obtidas, esta API retorna os dados do clima em tempo real, co
 O usuário digita o nome de uma cidade e, em poucos segundos, recebe um resumo atualizado das condições climáticas dessa localidade.
 
 ![Exemplo de clima chuvoso](https://raw.githubusercontent.com/eueumesmodavi/Aplicativo-Clima---Tempo/main/Aplicativo_Clima/interface/Chovendo.PNG)
+![Exemplo de clima chuvoso](https://raw.githubusercontent.com/eueumesmodavi/Aplicativo-Clima---Tempo/main/Aplicativo_Clima/interface/Neve.PNG)
+
+![Exemplo de clima chuvoso](https://raw.githubusercontent.com/eueumesmodavi/Aplicativo-Clima---Tempo/main/Aplicativo_Clima/interface/Nublado.PNG)
+![Exemplo de clima chuvoso](https://raw.githubusercontent.com/eueumesmodavi/Aplicativo-Clima---Tempo/main/Aplicativo_Clima/interface/Sol.PNG)
+
 
 
 Como meu primeiro projeto em java, decidi fazer um aplicativo de clima.
