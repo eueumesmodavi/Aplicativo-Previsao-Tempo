@@ -20,9 +20,9 @@ public class ClimaTempoGUI extends JFrame {
 	private JSONObject climaData;
 
 	public ClimaTempoGUI() {
-		super("Clima | Tempo ");
+		super("Clima Tempo ");
 
-		// Comandos Menu | Dimensões
+		// Configurações da janela principal
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -37,18 +37,16 @@ public class ClimaTempoGUI extends JFrame {
 		addGuiComponentes();
 	}
 
-	// Configurações da caixa de pesquisa + escolha da fonte e tamanho
+	// Adiciona os componentes da interface gráfica
 	private void addGuiComponentes() {
+		// Caixa de pesquisa
 		JTextField caixaDePesquisa = new JTextField();
-
 		caixaDePesquisa.setBounds(15, 15, 351, 45);
-
 		caixaDePesquisa.setFont(new Font("Arial", Font.PLAIN, 14));
-
 		add(caixaDePesquisa);		
 
-		// Condições Climaticas Icone
-		JLabel condClimIcon = new JLabel(LoadImageClima());
+		// Ícone de condição climática
+		JLabel condClimIcon = new JLabel(LoadImageSol());
 		condClimIcon.setBounds(0, 125, 450, 217);
 		add(condClimIcon);
 
@@ -61,40 +59,40 @@ public class ClimaTempoGUI extends JFrame {
 		add(temperaturaText);
 
 		// Descrição do Clima
-		JLabel climaText = new JLabel("Nublado");
+		JLabel climaText = new JLabel("Limpo");
 		climaText.setBounds(0, 400, 450, 36);
 		climaText.setFont(new Font("Arial", Font.BOLD, 40));
 		climaText.setHorizontalAlignment(SwingConstants.CENTER);
 		add(climaText);
 
-		// Umidade Icone
+		// Ícone de umidade
 		JLabel umidadeicon = new JLabel(LoadImageHumidade());
 		umidadeicon.setBounds(15, 500, 74, 66);
 		add(umidadeicon);
 
-		// Descrição da Umidade
-		JLabel umidadetext = new JLabel("<html><b>Umidade</b><br>100%</html>");
+		// Descrição da umidade
+		JLabel umidadetext = new JLabel("<html><b>Umidade</b><br> 100%</html>");
 		umidadetext.setBounds(90, 500, 85, 55);
 		umidadetext.setFont(new Font("Arial", Font.PLAIN, 15));
 		add(umidadetext);
 
-		// Vento Icone
+		// Ícone de vento
 		JLabel ventoIcon = new JLabel(LoadImageVento());
 		ventoIcon.setBounds(220, 500, 74, 66);
 		add(ventoIcon);
 
 		// Velocidade do Vento
-		JLabel ventoText = new JLabel("<html><b>Velocidade:</b><br>15Km/h</html>");
+		JLabel ventoText = new JLabel("<html><b>Velocidade:</b><br> 15Km/h</html>");
 		ventoText.setBounds(310, 500, 85, 55);
-		ventoText.setFont(new Font("Arial", Font.PLAIN, 15));
+		ventoText.setFont(new Font("Arial", Font.PLAIN, 16));
 		add(ventoText);
 
-		// Adicionando butão de procura junto com o icone do mesmo
+		// Botão de busca com ícone de lupa
 		JButton lupaPesquisa = new JButton(LoadImageProcura());
-
-		// Configurando o cursor
 		lupaPesquisa.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		lupaPesquisa.setBounds(370, 15, 45, 45);
+		lupaPesquisa.setBounds(375, 13, 47, 45);
+		
+		// Ação ao clicar no botão de busca
 		lupaPesquisa.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -103,64 +101,75 @@ public class ClimaTempoGUI extends JFrame {
 				if(userInput.replaceAll("\\s", "").length() <=0) {
 					return;
 				}
-				try {
-					climaData = ClimaApp.getClimaData(userInput);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				climaData = ClimaApp.getClimaData(userInput);
+				// Atualiza a descrição do clima e o ícone correspondente
 				
-				String condiClima = (String) climaData.get("Condição_Climática");
+				String condiClima = (String) climaData.get("weather_condition");
+				climaText.setText(condiClima); 
+
 				
 				switch(condiClima) {
 				case "Limpo":
-					condClimIcon.setIcon(new ImageIcon("assets/sol.png"));
+					condClimIcon.setIcon(LoadImageSol());
 					break;
 				case "Nublado":
-					condClimIcon.setIcon(new ImageIcon("assets/nublado.png"));
+					condClimIcon.setIcon(LoadImageClima());
 					break;
 				case "Chovendo":
-					condClimIcon.setIcon(new ImageIcon("assets/chuva.png"));
+					condClimIcon.setIcon(LoadImageChuva());
 					break;
 				case "Nevando":
-					condClimIcon.setIcon(new ImageIcon("assets/chuva.png"));
+					condClimIcon.setIcon(LoadImageNeve());
 					break;
 				}
 				
-				double temperatura = (double) climaData.get("Temperatura");
-				temperaturaText.setText(temperatura + " C");
-				
 				condClimIcon.setText(condiClima);
 				
-				long umidade = (long) climaData.get("Umidade");
-				umidadetext.setText("<html><b>Umidade</b>"+ umidade +"%</html>");
+				// Atualiza temperatura
+				double temperatura = (double) climaData.get("temperature");
+				temperaturaText.setText(temperatura + " °C");
 				
-				double ventos = (double) climaData.get("Velocidade_do_Vento");
-				ventoText.setText("<html><b>Ventos:</b>"+ ventos +"Km/h</html>");
+				
+				// Atualiza umidade
+				long umidade = (long) climaData.get("humidity");
+				umidadetext.setText("<html><b>Umidade</b><br>"+ umidade +"%</html>");
+				
+				
+				// Atualiza velocidade do vento
+				double ventos = (double) climaData.get("windspeed");
+				ventoText.setText("<html><b>Ventos:</b><br>"+ ventos +" Km/h</html>");
 			}
 		});
 		add(lupaPesquisa);
 	}
-	// Class para retornar os icons
-
-	// Lupa
+	// Métodos para carregar os ícones
+	
 	public ImageIcon LoadImageProcura() {
 		return new ImageIcon("assets/iconeprocurar.png");
 	}
 
-	// Clima Nublado
 	public ImageIcon LoadImageClima() {
 		return new ImageIcon("assets/nublado.png");
 	}
 
-	// Umidade
 	public ImageIcon LoadImageHumidade() {
 		return new ImageIcon("assets/gota.png");
 	}
 
-	// Vento
 	public ImageIcon LoadImageVento() {
 		return new ImageIcon("assets/vento.png");
+	}
+	
+	public ImageIcon LoadImageSol() {
+		return new ImageIcon("assets/sol.png");
+	}
+	
+	public ImageIcon LoadImageChuva() {
+		return new ImageIcon("assets/chuva.png");
+	}
+	
+	public ImageIcon LoadImageNeve() {
+		return new ImageIcon("assets/neve.png");
 	}
 
 }

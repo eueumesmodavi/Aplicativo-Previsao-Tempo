@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,28 +14,26 @@ import org.json.simple.parser.ParseException;
 
 public class ClimaApp {
 	
-	//Buscar a localização
-	public static JSONObject getClimaData(String locationName) throws ParseException {
+	// Retorna os dados climáticos da cidade informada
+	public static JSONObject getClimaData(String locationName) {
 		
+		// Busca as coordenadas da cidade através da API de geolocalização
 		JSONArray locationData = getLocationData(locationName);
+
 		
-		if (locationData != null && !locationData.isEmpty()) {
-		    JSONObject firstResult = (JSONObject) locationData.get(0);
-		    return firstResult;
-		}
-		
-		//Latitude e Longitude
+		// Obtém latitude e longitude do primeiro resultado retornado
 		
 		JSONObject location = (JSONObject) locationData.get(0);
 		double latitude = (double) location.get("latitude");
 		double longitude = (double) location.get("longitude");
 		
-		//Pegando dados da API através das coordenadas
-		String urlString = "https://api.open-meteo.com/v1/forecast?"
-				+ "latitude="+ latitude +"&longitude="+ longitude
-				+ "&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=America%2FSao_Paulo";
+		// Monta a URL para consulta da previsão do tempo usando as coordenadas
+		String urlString = "https://api.open-meteo.com/v1/forecast?" + "latitude=" + latitude + "&longitude="
+				+ longitude
+				+ "&hourly=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m&timezone=America%2FSao_Paulo";
 		
 		try {
+			// Faz a requisição à API
 			HttpURLConnection conn = fetchApiReponse(urlString);
 			
 			if(conn.getResponseCode()!= 200) {
@@ -45,6 +41,7 @@ public class ClimaApp {
 				return null;
 			}
 			
+			// Lê a resposta da API
 			StringBuilder resultJson = new StringBuilder();
 			Scanner sc = new Scanner(conn.getInputStream());
 			
@@ -54,7 +51,8 @@ public class ClimaApp {
 			
 			sc.close();
 			conn.disconnect();
-			
+
+			// Converte a resposta JSON
 			JSONParser parser = new JSONParser();
 			JSONObject resultJsonObj = (JSONObject) parser.parse(String.valueOf(resultJson));
 			
@@ -62,29 +60,31 @@ public class ClimaApp {
 			
 			JSONArray time = (JSONArray) hora.get("time");
 			
+			// Encontra o índice da hora atual na lista de horários da API
 			int index = findIndexHoraAtual(time);
 			
-			//Pegar a temperatura
+			// Obtém os dados correspondentes ao horário atual
 			JSONArray temperaturaData = (JSONArray) hora.get("temperature_2m");
 			double temperatura = (double) temperaturaData.get(index);
 			
-			//Pegar as Condições Climáticas
+			
 			JSONArray climaCode = (JSONArray) hora.get("weathercode");
 			String climaCondition = convertClimaCode((long) climaCode.get(index));
 			
-			//Pegar a Umidade
+			
 			JSONArray umidadeRelativa = (JSONArray) hora.get("relativehumidity_2m");
 			long umidade = (long) umidadeRelativa.get(index);
 			
-			//Velocidade do Vento
+			
 			JSONArray ventoData = (JSONArray) hora.get("windspeed_10m");
 			double ventoVelocidade = (double) ventoData.get(index);
 			
+			// Cria um objeto JSON contendo os dados climáticos finais
 			JSONObject climaData = new JSONObject();
-			climaData.put("Temperatura", temperatura);
-			climaData.put("Condição_Climática", climaCondition);
-			climaData.put("Umidade", umidade);
-			climaData.put("Velocidade_do_Vento", ventoVelocidade);
+			climaData.put("temperature", temperatura);
+			climaData.put("weather_condition", climaCondition);
+			climaData.put("humidity", umidade);
+			climaData.put("windspeed", ventoVelocidade);
 			
 			return climaData;
 			
@@ -92,13 +92,12 @@ public class ClimaApp {
 			e.printStackTrace();
 		}
 		
-		//Caso não consiga retornar a localização
 		return null;
 
 	}
 	
-	//Buscar a cidade
-	public static JSONArray getLocationData(String locationName) throws ParseException {
+	// Consulta as coordenadas a partir do nome da cidade
+	public static JSONArray getLocationData(String locationName) {
 		locationName = locationName.replaceAll(" ", "+");
 		
 		String urlString = "https://geocoding-api.open-meteo.com/v1/search?name="
@@ -114,7 +113,7 @@ public class ClimaApp {
 				StringBuilder resultJson = new StringBuilder();
 				Scanner sc = new Scanner(conn.getInputStream());
 				
-				//Lê e guarda os resultados do StringBuilder
+				// Lê a resposta da API
 				while(sc.hasNext()) {
 					resultJson.append(sc.nextLine());
 				}
@@ -122,6 +121,7 @@ public class ClimaApp {
 				
 				conn.disconnect();
 				
+				// Converte a resposta JSON e retorna os resultados
 				JSONParser parser = new JSONParser();
 				JSONObject resultJsonObj = (JSONObject) parser.parse(String.valueOf(resultJson));
 				
@@ -129,18 +129,18 @@ public class ClimaApp {
 				return locationData;
 			}
 			
-		}catch(IOException e) {
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	//
-	private static HttpsURLConnection fetchApiReponse(String urlString) {
+	// Realiza uma requisição GET para a URL fornecida e retorna a conexão
+	private static HttpURLConnection fetchApiReponse(String urlString) {
 		try {
 			
 			URL url = new URL(urlString);
-			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
 			
 			conn.setRequestMethod("GET");
@@ -152,7 +152,7 @@ public class ClimaApp {
 		}
 		return null;
 	}
-	//Encontrando a hora atual
+	// Retorna o índice correspondente à hora atual na lista de horários da API
 	private static int findIndexHoraAtual(JSONArray timeList) {
 		String horaAtual = getHoraAtual();
 		
@@ -167,12 +167,10 @@ public class ClimaApp {
 		
 	}
 	
-	//Pegar o horário atual
+	// Retorna a hora atual no formato utilizado pela API
 	private static String getHoraAtual() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH':00'");
-		
 		LocalDateTime currentDateTime = LocalDateTime.now();
-		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH':00'");
 		String horarioFormatado = currentDateTime.format(dtf);
 		
 		return horarioFormatado;
@@ -180,12 +178,12 @@ public class ClimaApp {
 		
 	}
 	
-	//Condições do Clima
+	// Converte o código numérico do clima em uma descrição textual
 	private static String convertClimaCode(long climacode) {
 		String climaCondition = "";
 		if(climacode == 0L) {
 			climaCondition = "Limpo";
-		}else if(climacode <= 3L && climacode > 0L) {
+		}else if(climacode > 0L && climacode <= 3L) {
 			climaCondition = "Nublado";
 		}else if((climacode >=51L && climacode <= 67L || (climacode >= 80L && climacode <= 99L))) {
 			climaCondition = "Chovendo";
