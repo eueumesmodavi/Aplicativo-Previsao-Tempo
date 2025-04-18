@@ -18,6 +18,8 @@ Com as coordenadas obtidas, esta API retorna os dados do clima em tempo real, co
 
 O usuário digita o nome de uma cidade e, em poucos segundos, recebe um resumo atualizado das condições climáticas dessa localidade.
 
+![Exemplo da interface](interface/chovendo.png)
+
 
 Como meu primeiro projeto em java, decidi fazer um aplicativo de clima.
 
