@@ -26,7 +26,7 @@ O usuário digita o nome de uma cidade e, em poucos segundos, recebe um resumo a
 
 
 
-Como meu primeiro projeto em java, decidi fazer um aplicativo de clima.
+Meu primeiro projeto em java.
 
 Este projeto foi baseado em um código existente, mas passou por diversas modificações feitas por mim para corrigir erros e torná-lo totalmente funcional.
 As alterações envolveram ajustes na lógica de consumo das APIs, tratamento de erros e melhorias na interface do usuário.
