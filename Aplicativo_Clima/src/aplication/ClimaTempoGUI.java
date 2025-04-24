@@ -4,6 +4,8 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -82,7 +84,7 @@ public class ClimaTempoGUI extends JFrame {
 		add(ventoIcon);
 
 		// Velocidade do Vento
-		JLabel ventoText = new JLabel("<html><b>Velocidade:</b><br>15 Km/h</html>");
+		JLabel ventoText = new JLabel("<html><b>Velocidade:e</b><br>15 Km/h</html>");
 		ventoText.setBounds(310, 500, 85, 55);
 		ventoText.setFont(new Font("Arial", Font.PLAIN, 16));
 		add(ventoText);
@@ -92,6 +94,14 @@ public class ClimaTempoGUI extends JFrame {
 		lupaPesquisa.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		lupaPesquisa.setBounds(375, 13, 47, 45);
 		
+		//Data e Hora
+		
+		JLabel dataText = new JLabel(dataLocal());
+		dataText.setBounds(100, 90, 250, 30);
+		dataText.setFont(new Font("Arial", Font.BOLD, 16));
+		dataText.setHorizontalAlignment(SwingConstants.CENTER);
+		add(dataText);
+				
 		// Ação ao clicar no botão de busca
 		lupaPesquisa.addActionListener(new ActionListener() {
 			@Override
@@ -123,7 +133,6 @@ public class ClimaTempoGUI extends JFrame {
 					break;
 				}
 				
-				//condClimIcon.setText(condiClima);
 				
 				// Atualiza temperatura
 				double temperatura = (double) climaData.get("temperature");
@@ -170,6 +179,14 @@ public class ClimaTempoGUI extends JFrame {
 	
 	public ImageIcon LoadImageNeve() {
 		return new ImageIcon("assets/snow1.png");
+	}
+	
+	//Data e Dia
+	public static String dataLocal() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+		LocalDateTime horarioLocal = LocalDateTime.now();
+		String horarioFormat = horarioLocal.format(dtf);
+		return horarioFormat;
 	}
 
 }
