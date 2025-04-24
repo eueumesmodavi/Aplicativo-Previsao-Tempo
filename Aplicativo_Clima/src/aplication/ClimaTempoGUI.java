@@ -181,7 +181,7 @@ public class ClimaTempoGUI extends JFrame {
 		return new ImageIcon("assets/snow1.png");
 	}
 	
-	//Data e Dia
+	//Data e Hora
 	public static String dataLocal() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		LocalDateTime horarioLocal = LocalDateTime.now();
